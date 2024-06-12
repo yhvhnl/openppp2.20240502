@@ -5,28 +5,21 @@
 
 name: PPP PRIVATE NETWORK™ 2 LINUX BUILD SCRIPT CROSS.(X) 1.0.0 VERSION.
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on:
+  watch:
+    types: started
+
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [centos:7] # ubuntu-22.04, ubuntu-20.04, ubuntu-18.04
+    name: Run on CentOS 7
+    runs-on: ubuntu-latest
+    container:
+      image: "centos:7"  # 需要运行的容器镜像（参考 docker hub）
         arch: [amd64] # ${{ runner.arch }}
         platform: 
           - linux/amd64
-          - linux/aarch64
-          - linux/armv7l
-          - linux/ppc64el
-          - linux/s390x
-          - linux/riscv64
-          - linux/mipsel
+    
 
     runs-on: ${{ matrix.os }}
     env:
@@ -50,24 +43,7 @@ jobs:
           linux/amd64)
             echo ::set-env name=THIRD_PARTY_LIBRARY_DIR::${GITHUB_WORKSPACE}/3rd/amd64
             ;;
-          linux/aarch64)
-            echo ::set-env name=THIRD_PARTY_LIBRARY_DIR::${GITHUB_WORKSPACE}/3rd/aarch64
-            ;;
-          linux/armv7l)
-            echo ::set-env name=THIRD_PARTY_LIBRARY_DIR::${GITHUB_WORKSPACE}/3rd/armv7l
-            ;;
-          linux/ppc64el)
-            echo ::set-env name=THIRD_PARTY_LIBRARY_DIR::${GITHUB_WORKSPACE}/3rd/ppc64el
-            ;;
-          linux/s390x)
-            echo ::set-env name=THIRD_PARTY_LIBRARY_DIR::${GITHUB_WORKSPACE}/3rd/s390x
-            ;;
-          linux/riscv64)
-            echo ::set-env name=THIRD_PARTY_LIBRARY_DIR::${GITHUB_WORKSPACE}/3rd/riscv64
-            ;;
-          linux/mipsel)
-            echo ::set-env name=THIRD_PARTY_LIBRARY_DIR::${GITHUB_WORKSPACE}/3rd/mipsel
-            ;;
+
           *)
             echo "Unsupported platform: ${{ matrix.platform }}"
             exit 1
@@ -82,36 +58,7 @@ jobs:
             echo ::set-env name=PLATFORM_CC::gcc
             echo ::set-env name=PLATFORM_CXX::g++
             ;;
-          linux/aarch64)
-            echo ::set-env name=PLATFORM_LD::aarch64-linux-gnu-ld
-            echo ::set-env name=PLATFORM_CC::aarch64-linux-gnu-gcc
-            echo ::set-env name=PLATFORM_CXX::aarch64-linux-gnu-g++
-            ;;
-          linux/armv7l)
-            echo ::set-env name=PLATFORM_LD::arm-linux-gnueabihf-ld
-            echo ::set-env name=PLATFORM_CC::arm-linux-gnueabihf-gcc
-            echo ::set-env name=PLATFORM_CXX::arm-linux-gnueabihf-g++
-            ;;
-          linux/ppc64el)
-            echo ::set-env name=PLATFORM_LD::powerpc64le-linux-gnu-ld
-            echo ::set-env name=PLATFORM_CC::powerpc64le-linux-gnu-gcc
-            echo ::set-env name=PLATFORM_CXX::powerpc64le-linux-gnu-g++
-            ;;
-          linux/s390x)
-            echo ::set-env name=PLATFORM_LD::s390x-linux-gnu-ld
-            echo ::set-env name=PLATFORM_CC::s390x-linux-gnu-gcc
-            echo ::set-env name=PLATFORM_CXX::s390x-linux-gnu-g++
-            ;;
-          linux/riscv64)
-            echo ::set-env name=PLATFORM_LD::riscv64-linux-gnu-ld
-            echo ::set-env name=PLATFORM_CC::riscv64-linux-gnu-gcc
-            echo ::set-env name=PLATFORM_CXX::riscv64-linux-gnu-g++
-            ;;
-        linux/mipsel)
-            echo ::set-env name=PLATFORM_LD::mipsel-linux-gnu-ld
-            echo ::set-env name=PLATFORM_CC::mipsel-linux-gnu-gcc
-            echo ::set-env name=PLATFORM_CXX::mipsel-linux-gnu-g++
-            ;;
+
           *)
             echo "Unsupported platform: ${{ matrix.platform }}"
             exit 1
@@ -136,24 +83,6 @@ jobs:
         case ${{ matrix.platform }} in
           linux/amd64)
             sudo yum install gcc g++ -y
-            ;;
-          linux/aarch64)
-            sudo yum install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu -y
-            ;;
-          linux/armv7l)
-            sudo yum install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf -y
-            ;;
-          linux/ppc64el)
-            sudo yum install gcc-powerpc64le-linux-gnu g++-powerpc64le-linux-gnu -y
-            ;;
-          linux/s390x)
-            sudo yum install gcc-s390x-linux-gnu g++-s390x-linux-gnu -y
-            ;;
-          linux/riscv64)
-            sudo yum install gcc-riscv64-linux-gnu g++-riscv64-linux-gnu -y
-            ;;
-          linux/mipsel)
-            sudo yum install gcc-mipsel-linux-gnu g++-mipsel-linux-gnu -y
             ;;
           *)
             echo "Unsupported platform: ${{ matrix.platform }}"
