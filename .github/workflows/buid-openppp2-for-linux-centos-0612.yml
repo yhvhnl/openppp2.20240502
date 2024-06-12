@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [centos-7] # ubuntu-22.04, ubuntu-20.04, ubuntu-18.04
+        os: [CI Centos7] # ubuntu-22.04, ubuntu-20.04, ubuntu-18.04
         arch: [amd64] # ${{ runner.arch }}
         platform: 
           - linux/amd64
